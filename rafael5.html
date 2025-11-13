@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smooth Gradient Square</title>
+    <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Плавный градиентный квадрат</h1>
+        <div id="canvas"></div>
+        <div class="instructions">Наведите курсор на квадрат</div>
+        <div class="color-info" id="colorInfo">Цвет: Синий</div>
+    </div>
+
+    <script>
+        var paper = Raphael("canvas", 400, 400);
+        
+        // Создаем светлый фон для холста
+        var bg = paper.rect(0, 0, 400, 400);
+        bg.attr({
+            fill: "#f8f9fa"
+        });
+        
+        // Основной квадрат с градиентом
+        var rect = paper.rect(150, 150, 100, 100);
+        rect.attr({ 
+            fill: "45-#2196F3-#0D47A1", // Синий градиент
+            stroke: "none" // Убрали границу
+        });
+        
+        // Элемент для отображения текущего цвета
+        var colorInfo = document.getElementById('colorInfo');
+        var colors = [
+            {name: "Синий", gradient: "45-#2196F3-#0D47A1"},
+            {name: "Зеленый", gradient: "45-#4CAF50-#1B5E20"},
+            {name: "Желтый", gradient: "45-#FFEB3B-#F57F17"},
+            {name: "Оранжевый", gradient: "45-#FF9800-#E65100"},
+            {name: "Красный", gradient: "45-#F44336-#B71C1C"},
+            {name: "Фиолетовый", gradient: "45-#9C27B0-#4A148C"},
+            {name: "Розовый", gradient: "45-#E91E63-#880E4F"}
+        ];
+        var currentColorIndex = 0;
+        var colorInterval;
+        
+        // Обработчик наведения
+        rect.mouseover(function() {
+            // Плавное увеличение квадрата
+            this.animate({ 
+                width: 140, 
+                height: 140, 
+                x: 130, 
+                y: 130 
+            }, 400, ">"); // Плавная анимация
+            
+            // Плавное изменение цвета через градиенты
+            colorInterval = setInterval(function() {
+                currentColorIndex = (currentColorIndex + 1) % colors.length;
+                
+                rect.animate({
+                    fill: colors[currentColorIndex].gradient
+                }, 500);
+                
+                colorInfo.textContent = "Цвет: " + colors[currentColorIndex].name;
+            }, 600);
+        });
+        
+        // Обработчик ухода
+        rect.mouseout(function() {
+            // Останавливаем смену цветов
+            clearInterval(colorInterval);
+            
+            // Плавное возвращение к исходному размеру
+            this.animate({ 
+                width: 100, 
+                height: 100, 
+                x: 150, 
+                y: 150 
+            }, 400, ">");
+            
+            // Плавное возвращение к синему цвету
+            rect.animate({
+                fill: colors[0].gradient
+            }, 500);
+            
+            // Обновляем информацию о цвете
+            currentColorIndex = 0;
+            colorInfo.textContent = "Цвет: " + colors[0].name;
+        });
+        
+        // Добавляем эффект вращения при клике
+        rect.click(function() {
+            this.animate({
+                transform: "r360"
+            }, 800, ">");
+        });
+    </script>
+</body>
+</html>

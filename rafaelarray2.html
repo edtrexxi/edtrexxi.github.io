@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Визуализация случайных чисел</title>
+    <script src="https://cdn.jsdelivr.net/npm/raphael@2.3.0/raphael.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 300;
+            font-size: 2.2em;
+        }
+
+        #canvas {
+            margin: 20px auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background: #fafafa;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .filter-btn:active {
+            transform: translateY(0);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .info-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+            border-left: 4px solid #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .filter-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Визуализация данных</h1>
+        
+        <div id="canvas"></div>
+        
+        <div class="info-panel">
+            Набор случайных чисел: <span id="numbers-display"></span>
+        </div>
+        
+        <div class="controls">
+            <button class="filter-btn active" onclick="showOriginal()">Исходные данные</button>
+            <button class="filter-btn" onclick="showFiltered50()">Числа > 50</button>
+            <button class="filter-btn" onclick="showFiltered70()">Числа > 70</button>
+            <button class="filter-btn" onclick="showEven()">Чётные числа</button>
+        </div>
+    </div>
+
+    <script>
+        const randomNumbers = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1);
+        console.log("Случайные числа:", randomNumbers);
+
+        // Обновляем отображение чисел в info-панели
+        document.getElementById('numbers-display').textContent = randomNumbers.join(', ');
+
+        const paper = Raphael("canvas", 600, 400);
+        let bars = [];
+        let labels = []; 
+        let titleText = null;
+        let currentActiveBtn = document.querySelector('.filter-btn');
+
+        function setActiveButton(btn) {
+            currentActiveBtn.classList.remove('active');
+            btn.classList.add('active');
+            currentActiveBtn = btn;
+        }
+
+        function clearCanvas() {
+            bars.forEach(bar => bar.remove());
+            labels.forEach(label => label.remove());
+            if (titleText) titleText.remove();
+            
+            bars = [];
+            labels = [];
+            titleText = null;
+        }
+
+        function drawBars(data, title, button) {
+            clearCanvas();
+            setActiveButton(button);
+            
+            if (data.length === 0) {
+                titleText = paper.text(300, 200, "Нет данных для отображения").attr({
+                    "font-size": 16,
+                    fill: "#6c757d",
+                });
+                return;
+            }
+            
+            const barWidth = 40;
+            const gap = 20;
+            const maxBarHeight = 250;
+            const startX = (600 - (data.length * (barWidth + gap) - gap)) / 2; 
+
+            titleText = paper.text(300, 370, title).attr({
+                "font-size": 16,
+                fill: "#2c3e50",
+                "font-weight": "bold"
+            });
+
+            // Цветовая палитра для столбцов
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7'];
+            
+            data.forEach((value, index) => {
+                const barHeight = (value / 100) * maxBarHeight;
+                const x = startX + index * (barWidth + gap);
+                const color = colors[index % colors.length];
+                
+                const bar = paper.rect(
+                    x,
+                    340 - barHeight,
+                    barWidth,
+                    barHeight
+                );
+                bar.attr({
+                    fill: color,
+                    stroke: "#fff",
+                    "stroke-width": 2,
+                    r: 4 // Закругленные углы
+                });
+                
+                // Добавляем эффект при наведении
+                bar.hover(
+                    function() {
+                        this.attr({ opacity: 0.8 });
+                    },
+                    function() {
+                        this.attr({ opacity: 1 });
+                    }
+                );
+                
+                bars.push(bar);
+
+                const label = paper.text(
+                    x + barWidth / 2,
+                    350 - barHeight,
+                    value.toString()
+                ).attr({
+                    "font-size": 12,
+                    fill: "#2c3e50",
+                    "font-weight": "bold"
+                });
+                labels.push(label);
+
+                // Подпись под столбцом
+                const indexLabel = paper.text(
+                    x + barWidth / 2,
+                    360,
+                    (index + 1).toString()
+                ).attr({
+                    "font-size": 10,
+                    fill: "#6c757d"
+                });
+                labels.push(indexLabel);
+            });
+        }
+
+        function showOriginal() {
+            const btn = document.querySelector('.filter-btn:nth-child(1)');
+            drawBars(randomNumbers, "Исходные данные", btn);
+        }
+
+        function showFiltered50() {
+            const btn = document.querySelector('.filter-btn:nth-child(2)');
+            const filtered = randomNumbers.filter(num => num > 50);
+            drawBars(filtered, "Числа больше 50", btn);
+        }
+
+        function showFiltered70() {
+            const btn = document.querySelector('.filter-btn:nth-child(3)');
+            const filtered = randomNumbers.filter(num => num > 70);
+            drawBars(filtered, "Числа больше 70", btn);
+        }
+
+        function showEven() {
+            const btn = document.querySelector('.filter-btn:nth-child(4)');
+            const even = randomNumbers.filter(num => num % 2 === 0);
+            drawBars(even, "Чётные числа", btn);
+        }
+
+        // Инициализация
+        showOriginal();
+    </script>
+</body>
+</html>

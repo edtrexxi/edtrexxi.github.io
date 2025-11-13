@@ -1,0 +1,224 @@
+/* web(index).css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    color: #1565c0;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+    border: 2px solid #e3f2fd;
+    backdrop-filter: blur(10px);
+}
+
+.header h1 {
+    margin: 0 0 15px 0;
+    color: #1976d2;
+    font-size: 2.5em;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header p {
+    margin: 0;
+    font-size: 1.2em;
+    color: #42a5f5;
+    font-weight: 500;
+}
+
+.content {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.15);
+    border: 2px solid #e3f2fd;
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    color: #1976d2;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 3px solid #bbdefb;
+    padding-bottom: 10px;
+}
+
+.section-title i {
+    color: #42a5f5;
+}
+
+.works-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 20px;
+}
+
+.work-item {
+    background: linear-gradient(135deg, #f8fdff 0%, #e3f2fd 100%);
+    border: 2px solid #bbdefb;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.work-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+}
+
+.work-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(33, 150, 243, 0.2);
+    border-color: #90caf9;
+}
+
+.work-number {
+    background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.work-content {
+    flex: 1;
+}
+
+.work-title {
+    color: #1976d2;
+    margin: 0 0 8px 0;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.work-content p {
+    margin: 0 0 15px 0;
+    color: #42a5f5;
+    font-size: 1em;
+}
+
+.work-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.work-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.4);
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+}
+
+.work-link i {
+    font-size: 0.9em;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    color: #42a5f5;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.1);
+    border: 2px solid #e3f2fd;
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.work-item {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.work-item:nth-child(1) { animation-delay: 0.1s; }
+.work-item:nth-child(2) { animation-delay: 0.2s; }
+.work-item:nth-child(3) { animation-delay: 0.3s; }
+.work-item:nth-child(4) { animation-delay: 0.4s; }
+.work-item:nth-child(5) { animation-delay: 0.5s; }
+.work-item:nth-child(6) { animation-delay: 0.6s; }
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header {
+        padding: 25px 20px;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+    
+    .content {
+        padding: 25px 20px;
+    }
+    
+    .work-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .work-item::before {
+        width: 100%;
+        height: 4px;
+    }
+}
